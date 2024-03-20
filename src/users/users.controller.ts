@@ -1,4 +1,5 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
   Delete,
@@ -6,10 +7,12 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
+  Post,
   SerializeOptions,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user-dto';
 
 @Controller('users')
 @SerializeOptions({
@@ -21,7 +24,7 @@ export class UsersController {
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
   async getUsers() {
-    const users = this.usersService.getAllUsers();
+    const users = await this.usersService.getAllUsers();
 
     return users;
   }
@@ -29,9 +32,17 @@ export class UsersController {
   @Get(':id')
   @UseInterceptors(ClassSerializerInterceptor)
   async getUser(@Param('id', ParseIntPipe) id: number) {
-    const user = this.usersService.getUser(id);
+    const user = await this.usersService.getUser(id);
 
     return user;
+  }
+
+  @Post('/signup')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async registration(@Body() input: CreateUserDto) {
+    const newUser = await this.usersService.createNewUser(input);
+
+    return newUser;
   }
 
   @Delete(':id')

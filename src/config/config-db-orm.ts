@@ -13,6 +13,6 @@ export default registerAs(
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     entities: [Event, User],
-    synchronize: true, //don`t need this flag in production
+    synchronize: true,
   }),
 );

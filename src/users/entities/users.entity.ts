@@ -1,5 +1,6 @@
 import { Expose } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Event } from 'src/events/events.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -11,14 +12,18 @@ export class User {
   @Expose()
   name: string;
 
-  @Column({ unique: true })
+  @Column()
   @Expose()
   username: string;
 
-  @Column({ unique: true })
+  @Column()
   @Expose()
   email: string;
 
   @Column()
   password: string;
+
+  @OneToMany(() => Event, (event) => event.user)
+  @Expose()
+  events: Event[];
 }

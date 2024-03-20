@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { FindOneOptions, Repository } from 'typeorm';
 import { User } from './entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from 'src/dtos/create-user-dto';
+import { CreateUserDto } from 'src/users/dto/create-user-dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -14,14 +18,30 @@ export class UsersService {
 
   public async createNewUser(user: CreateUserDto) {
     const { name, username, email, password } = user;
+    const isNotUniqueEmail = await this.repository.findOne({
+      where: { email },
+    });
+    const isNotUniqueUsername = await this.repository.findOne({
+      where: { username },
+    });
+
+    if (isNotUniqueEmail || isNotUniqueUsername) {
+      throw new BadRequestException(
+        'user with this email or username already exists',
+      );
+    }
+
     const hashedPassword = await this.hashPassword(password);
+
     const newUser = this.repository.create({
       name,
       username,
       password: hashedPassword,
       email,
     });
+
     await this.repository.save(newUser);
+
     return newUser;
   }
 
