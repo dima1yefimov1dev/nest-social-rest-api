@@ -22,14 +22,32 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Description:
+This is nestJs API built for creating and managing different events, you can create, update, delete them.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features: 
+-[X] NestJs: progressive framework for building APis,
+-[X] TypeORM: modern ORM for workign with TypeScript,
+-[X] Validators, Global pipes
+-[X] database runs on docker
+-[X] PostgreSQL
 
 ## Installation
 
 ```bash
-$ npm install
+$ npm cli
+
+# compose docker:
+$ docker-compose up
+```
+## Set .env variables: 
+```bash
+DB_HOST=localhost
+DB_PORT='port u want to use | 5432 from docker'
+DB_USER='your database username'
+DB_PASSWORD=example
+DB_NAME= 'your db name'
+AUTH_SECRET= 'your jwt secret here'
 ```
 
 ## Running the app
@@ -58,16 +76,31 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## USER endpoints: 
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+| Endpoint               | Method | Description                                       | 
+|------------------------|--------|---------------------------------------------------| 
+| /api/users             | GET    | Retrieve all users                                |          
+| /api/users/:id         | GET    | Retrieve user with provided ID                    |         
+| /api/users/signup      | POST   | Register a new user        
 
-## Stay in touch
+## EVENT endpoints: 
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| Endpoint                     | Method | Description                                           | Need Auth |
+|------------------------------|--------|-------------------------------------------------------| --------- | 
+| /api/events                  | GET    | Retrieve all events                                   |           |                
+| /api/events/:id              | GET    | Retrieve a specific event by ID                       |           |                
+| /api/events                  | POST   | Create a new event                                    | YES       |                
+| /api/events/:id              | PATCH  | Update a specific event by ID                         | YES       |                
+| /api/events/:id              | DELETE | Delete a specific event by ID                         | YES       |                
+| /api/users/organized/:id     | GET    | Retrieve all events created by a specific user        |           | 
 
-## License
+## AUTH endpoints: 
 
-Nest is [MIT licensed](LICENSE).
+| Endpoint         | Method | Description                                | Need Auth | 
+|------------------|--------|--------------------------------------------| --------- | 
+| /api/auth/signin | POST   | Log in with existing user credentials      |           |          
+| /api/auth/profile| GET    | Retrieve profile of current authorized user| YES       | 
+
+
+
