@@ -26,11 +26,13 @@
 This is nestJs API built for creating and managing different events, you can create, update, delete them.
 
 ## Features: 
--[X] NestJs: progressive framework for building APis,
--[X] TypeORM: modern ORM for workign with TypeScript,
--[X] Validators, Global pipes
--[X] database runs on docker
--[X] PostgreSQL
+- [X] NestJs: progressive framework for building APis,
+- [X] TypeORM: modern ORM for workign with TypeScript,
+- [X] Validators, Global pipes
+- [X] database runs on docker
+- [X] PostgreSQL
+- [X] Auth with cookies
+- [X] All simple functionality for network  
 
 ## Installation
 
@@ -84,16 +86,26 @@ $ npm run test:cov
 | /api/users/:id         | GET    | Retrieve user with provided ID                    |         
 | /api/users/signup      | POST   | Register a new user        
 
-## EVENT endpoints: 
+## POSTS endpoints: 
+| Method | Endpoint               | Description                   | Auth Required | Body                                 |
+|--------|------------------------|-------------------------------|--------------|--------------------------------------|
+| GET    | /posts                 | Get all posts                 | No           |                                      |
+| GET    | /posts/:id             | Get a post by ID              | No           |                                      |
+| POST   | /posts                 | Create a new post             | Yes          | { title: string, body: string }      |
+| PATCH  | /posts/:id             | Update a post by ID           | Yes          | { title?: string, body?: string }    |
+| DELETE | /posts/:id             | Delete a post by ID           | Yes          |                                      |
+| POST   | /posts/comment/:id     | Comment on a post             | Yes          | { text: string }                     |
+| GET    | /posts/comment/:id     | Get comments on a post        | No           |                                      |
+| PATCH  | /posts/like/:id        | Like or unlike a post         | Yes          |                                      |
+| GET    | /posts/like/:id        | Get users who liked a post    | No           |                                      |
 
-| Endpoint                     | Method | Description                                           | Need Auth |
-|------------------------------|--------|-------------------------------------------------------| --------- | 
-| /api/events                  | GET    | Retrieve all events                                   |           |                
-| /api/events/:id              | GET    | Retrieve a specific event by ID                       |           |                
-| /api/events                  | POST   | Create a new event                                    | YES       |                
-| /api/events/:id              | PATCH  | Update a specific event by ID                         | YES       |                
-| /api/events/:id              | DELETE | Delete a specific event by ID                         | YES       |                
-| /api/users/organized/:id     | GET    | Retrieve all events created by a specific user        |           | 
+## COMENTS endpoints: 
+| Method | Endpoint           | Description              | Auth Required | Body            |
+|--------|--------------------|--------------------------|--------------|------------------|
+| GET    | /comments          | Get all comments         | No           |                  |
+| GET    | /comments/:id      | Get a comment by ID      | No           |                  |
+| DELETE | /comments/:id      | Delete a comment by ID   | Yes          |                  |
+| PATCH  | /comments/:id      | Update a comment by ID   | Yes          | { text: string } |
 
 ## AUTH endpoints: 
 
