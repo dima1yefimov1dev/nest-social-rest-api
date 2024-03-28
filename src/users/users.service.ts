@@ -4,9 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FindOneOptions, Repository } from 'typeorm';
-import { User } from './entities/users.entity';
+import { User } from './users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from 'src/users/dto/create-user-dto';
+import { CreateUserDto } from 'src/users/create-user-dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -54,6 +54,7 @@ export class UsersService {
   public async getUser(id: number) {
     const options: FindOneOptions<User> = {
       where: { id },
+      relations: ['posts'],
     };
 
     const user = await this.repository.findOne(options);
