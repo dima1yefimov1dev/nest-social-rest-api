@@ -1,29 +1,5 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description:
-This is nestJs API built for creating and managing different events, you can create, update, delete them.
+This is nestJs API built for social network. With these endpoints you can create users, posts, comments, like posts and etc, typical functionality of modern social nw. JWT tokens are used here and set to cookies.
 
 ## Features: 
 - [X] NestJs: progressive framework for building APis,
@@ -37,7 +13,7 @@ This is nestJs API built for creating and managing different events, you can cre
 ## Installation
 
 ```bash
-$ npm cli
+$ npm ci
 
 # compose docker:
 $ docker-compose up
@@ -50,6 +26,9 @@ DB_USER='your database username'
 DB_PASSWORD=example
 DB_NAME= 'your db name'
 AUTH_SECRET= 'your jwt secret here'
+SALT='salt for hashing password'
+TOKEN_LIFE_TIME='time for what your token is alive'
+PORT='port for your server'
 ```
 
 ## Running the app
@@ -80,11 +59,10 @@ $ npm run test:cov
 
 ## USER endpoints: 
 
-| Endpoint               | Method | Description                                       | 
-|------------------------|--------|---------------------------------------------------| 
-| /api/users             | GET    | Retrieve all users                                |          
-| /api/users/:id         | GET    | Retrieve user with provided ID                    |         
-| /api/users/signup      | POST   | Register a new user        
+| Endpoint         | Method | Description                                | Need Auth | 
+|------------------|--------|--------------------------------------------| --------- | 
+| /users           | GET    | Retrieve all users                         |           |          
+| /users/:id       | GET    | Retrieve user with provided ID             |           |     
 
 ## POSTS endpoints: 
 | Method | Endpoint               | Description                   | Auth Required | Body                                 |
@@ -109,10 +87,10 @@ $ npm run test:cov
 
 ## AUTH endpoints: 
 
-| Endpoint         | Method | Description                                | Need Auth | 
-|------------------|--------|--------------------------------------------| --------- | 
-| /api/auth/signin | POST   | Log in with existing user credentials      |           |          
-| /api/auth/profile| GET    | Retrieve profile of current authorized user| YES       | 
-
+| Endpoint         | Method | Description                                | Need Auth | Body |
+|------------------|--------|--------------------------------------------| --------- | ---- |
+| /auth/signin     | POST   | Log in with existing user credentials      |           |      |
+| /auth/profile    | GET    | Retrieve profile of current authorized user| YES       |      |
+| /auth/signup     | POST   | Endpoint for user registration. Retrieve new user| YES  | {"name": "John Doe", "username": "johndoe", "email": "john@example.com", "password": "password123"} |
 
 
