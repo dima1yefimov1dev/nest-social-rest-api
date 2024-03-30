@@ -1,35 +1,28 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { FindOneOptions, Repository } from 'typeorm';
 import { User } from './users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from 'src/users/create-user-dto';
+import { CreateUserDto } from 'src/users/dto/create-user-dto';
 import * as bcrypt from 'bcrypt';
+import { SALT } from 'src/config/config-constants';
+import { PaginationService } from 'src/pagination/pagination.service';
+import { UserRoles } from 'src/config/user-roles';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly repository: Repository<User>,
+    private readonly paginationService: PaginationService,
   ) {}
 
   public async createNewUser(user: CreateUserDto) {
     const { name, username, email, password } = user;
-    const isNotUniqueEmail = await this.repository.findOne({
-      where: { email },
-    });
-    const isNotUniqueUsername = await this.repository.findOne({
-      where: { username },
-    });
-
-    if (isNotUniqueEmail || isNotUniqueUsername) {
-      throw new BadRequestException(
-        'user with this email or username already exists',
-      );
-    }
 
     const hashedPassword = await this.hashPassword(password);
 
@@ -40,21 +33,24 @@ export class UsersService {
       email,
     });
 
-    await this.repository.save(newUser);
-
-    return newUser;
+    try {
+      await this.repository.save(newUser);
+      return newUser;
+    } catch (error) {
+      throw new BadRequestException(
+        'User with this email or username already exists',
+      );
+    }
   }
 
-  public async getAllUsers() {
+  public async getAllUsers(page: number, offset: number) {
     const users = await this.repository.find();
 
-    return users;
+    return this.paginationService.paginate(users, page, offset);
   }
-
   public async getUser(id: number) {
     const options: FindOneOptions<User> = {
       where: { id },
-      relations: ['posts'],
     };
 
     const user = await this.repository.findOne(options);
@@ -66,7 +62,11 @@ export class UsersService {
     return user;
   }
 
-  public async deleteUser(id: number) {
+  public async deleteUser(id: number, user: User) {
+    if (user.role !== UserRoles.ADMIN) {
+      throw new ForbiddenException('Only administrator can delete users');
+    }
+
     const userToDelete = await this.repository.findOne({ where: { id } });
 
     if (!userToDelete) {
@@ -79,6 +79,6 @@ export class UsersService {
   }
 
   public async hashPassword(password: string) {
-    return await bcrypt.hash(password, 10);
+    return await bcrypt.hash(password, SALT);
   }
 }

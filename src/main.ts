@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
+import { PORT } from './config/config-constants';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
@@ -23,6 +25,9 @@ async function bootstrap() {
       },
     }),
   );
-  await app.listen(3000);
+
+  await app.listen(PORT, () => {
+    console.log(`App is listening on port ${PORT}`);
+  });
 }
 bootstrap();

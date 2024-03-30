@@ -1,6 +1,12 @@
 import { Expose } from 'class-transformer';
 import { Post } from 'src/posts/posts-entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Comment {
@@ -14,10 +20,12 @@ export class Comment {
 
   @Column()
   @Expose()
+  @Index()
   postId: number;
 
   @Column()
   @Expose()
+  @Index()
   userId: number;
 
   @ManyToOne(() => Post, (post) => post.comments)

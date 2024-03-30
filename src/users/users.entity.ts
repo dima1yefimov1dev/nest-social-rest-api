@@ -4,6 +4,7 @@ import { Post } from 'src/posts/posts-entity';
 import {
   Column,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -26,15 +27,20 @@ export class User {
   @Column()
   @Expose()
   @Field()
+  @Index({ unique: true })
   username: string;
 
   @Column()
   @Expose()
   @Field()
+  @Index({ unique: true })
   email: string;
 
   @Column()
   password: string;
+
+  @Column({ default: 'user' })
+  role: string;
 
   @ManyToMany(() => Post, (post) => post.likes)
   @JoinTable()

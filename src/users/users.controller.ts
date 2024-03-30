@@ -1,5 +1,4 @@
 import {
-  Body,
   ClassSerializerInterceptor,
   Controller,
   Delete,
@@ -7,12 +6,15 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
-  Post,
+  Query,
   SerializeOptions,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './create-user-dto';
+import { AuthGuardJwt } from 'src/auth/guards/auth-guard-jwt';
+import { CurrentUser } from 'src/auth/decorators/current-user';
+import { User } from './users.entity';
 
 @Controller('users')
 @SerializeOptions({
@@ -23,9 +25,11 @@ export class UsersController {
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  async getUsers() {
-    const users = await this.usersService.getAllUsers();
-
+  async getUsers(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('offset', ParseIntPipe) offset: number,
+  ) {
+    const users = await this.usersService.getAllUsers(page, offset);
     return users;
   }
 
@@ -37,17 +41,13 @@ export class UsersController {
     return user;
   }
 
-  @Post('/signup')
-  @UseInterceptors(ClassSerializerInterceptor)
-  async registration(@Body() input: CreateUserDto) {
-    const newUser = await this.usersService.createNewUser(input);
-
-    return newUser;
-  }
-
   @Delete(':id')
   @HttpCode(204)
-  async deleteUser(@Param('id', ParseIntPipe) id: number) {
-    await this.usersService.deleteUser(id);
+  @UseGuards(AuthGuardJwt)
+  async deleteUser(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: User,
+  ) {
+    await this.usersService.deleteUser(id, user);
   }
 }

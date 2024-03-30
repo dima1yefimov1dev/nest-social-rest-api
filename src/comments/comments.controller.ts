@@ -8,6 +8,7 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Query,
   SerializeOptions,
   UseGuards,
   UseInterceptors,
@@ -26,8 +27,11 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Get()
-  public async getAll() {
-    return await this.commentsService.getAllComments();
+  public async getAll(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('offset', ParseIntPipe) offset: number,
+  ) {
+    return await this.commentsService.getAllComments(page, offset);
   }
 
   @Get(':id')

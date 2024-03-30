@@ -10,12 +10,14 @@ import { User } from 'src/users/users.entity';
 import { CreateComment } from './dto/create-comment-dto';
 import { Post } from 'src/posts/posts-entity';
 import { UpdateCommentDto } from './dto/update-comment-dto';
+import { PaginationService } from 'src/pagination/pagination.service';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectRepository(Comment)
     private readonly repository: Repository<Comment>,
+    private readonly paginationService: PaginationService,
   ) {}
 
   public async getCommentById(id: number) {
@@ -41,20 +43,22 @@ export class CommentsService {
     return newComment;
   }
 
-  public async getAllCommentsByID(postId: number) {
-    return await this.repository.find({
+  public async getAllComments(page: number, offset: number) {
+    const comments = await this.repository.find();
+
+    return this.paginationService.paginate(comments, page, offset);
+  }
+
+  public async deleteAllCommentsById(postId: number) {
+    const commentsToDelete = await this.repository.find({
       where: {
         postId,
       },
     });
-  }
 
-  public async getAllComments() {
-    return await this.repository.find();
-  }
-
-  public async deleteAllCommentsById(id: number) {
-    const commentsToDelete = await this.getAllCommentsByID(id);
+    if (!commentsToDelete) {
+      throw new NotFoundException('Comments don`t exist on this post');
+    }
 
     return await this.repository.remove(commentsToDelete);
   }

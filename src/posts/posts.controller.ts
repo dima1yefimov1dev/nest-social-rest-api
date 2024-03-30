@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   SerializeOptions,
   UseGuards,
   UseInterceptors,
@@ -34,8 +35,11 @@ export class PostsController {
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
-  async getPosts() {
-    return await this.postsService.getAllPosts();
+  async getPosts(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('offset', ParseIntPipe) offset: number,
+  ) {
+    return await this.postsService.getAllPosts(page, offset);
   }
 
   @Get(':id')

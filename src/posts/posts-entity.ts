@@ -4,6 +4,7 @@ import { User } from 'src/users/users.entity';
 import {
   Column,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -36,6 +37,7 @@ export class Post {
 
   @Column({ name: 'user_id' })
   @Expose()
+  @Index()
   userId: number;
 
   @OneToMany(() => Comment, (comment) => comment.post, { cascade: true })

@@ -9,16 +9,20 @@ import { FindOneOptions, Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post-dto';
 import { User } from 'src/users/users.entity';
 import { UpdatePostDto } from './dto/update-post-dto';
+import { PaginationService } from 'src/pagination/pagination.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(Post)
     private readonly repository: Repository<Post>,
+    private readonly paginationService: PaginationService,
   ) {}
 
-  public async getAllPosts() {
-    return await this.repository.find();
+  public async getAllPosts(page: number, offset: number) {
+    const posts = await this.repository.find();
+
+    return this.paginationService.paginate(posts, page, offset);
   }
 
   public async getPostById(id: number, optionsRelations?: string | string[]) {
